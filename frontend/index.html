@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoolShift</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Rapid Forge Buildathon</p>
+        <h1>CoolShift</h1>
+      </div>
+      <div class="status" id="serviceStatus">Checking backend</div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Run controls">
+        <section>
+          <h2>Scenario</h2>
+          <label>
+            Dataset
+            <select id="scenarioSelect"></select>
+          </label>
+          <label>
+            Start date
+            <select id="dateSelect"></select>
+          </label>
+          <label>
+            Horizon
+            <select id="daysSelect">
+              <option value="1">24 hours / 96 intervals</option>
+              <option value="7">7 days / 672 intervals</option>
+            </select>
+          </label>
+        </section>
+
+        <section>
+          <h2>Objective Weights</h2>
+          <label>
+            Comfort
+            <input id="comfortWeight" type="range" min="0" max="1" step="0.05" value="0.45" />
+          </label>
+          <label>
+            Cost
+            <input id="costWeight" type="range" min="0" max="1" step="0.05" value="0.25" />
+          </label>
+          <label>
+            Emissions
+            <input id="emissionsWeight" type="range" min="0" max="1" step="0.05" value="0.15" />
+          </label>
+          <label>
+            Peak demand
+            <input id="peakWeight" type="range" min="0" max="1" step="0.05" value="0.15" />
+          </label>
+        </section>
+
+        <section>
+          <h2>Comfort Band</h2>
+          <div class="split">
+            <label>
+              Min C
+              <input id="comfortMin" type="number" step="0.5" value="0" />
+            </label>
+            <label>
+              Max C
+              <input id="comfortMax" type="number" step="0.5" value="0" />
+            </label>
+          </div>
+          <button id="runButton" class="primary">Run optimization</button>
+          <div class="export-row">
+            <a id="scheduleExport" href="#">Schedule CSV</a>
+            <a id="summaryExport" href="#">Summary CSV</a>
+          </div>
+        </section>
+      </aside>
+
+      <section class="content">
+        <section class="hero">
+          <div>
+            <p class="eyebrow" id="scenarioType">Cooling optimization platform</p>
+            <h2 id="scenarioName">Loading scenarios</h2>
+            <p id="scenarioFocus">Baseline, optimization, comfort, solar, battery, outages, and judge-ready exports.</p>
+          </div>
+          <div class="run-meta">
+            <span id="rowCount">0 rows</span>
+            <span id="elapsed">0 ms</span>
+          </div>
+        </section>
+
+        <section class="kpis" id="kpiGrid"></section>
+
+        <section class="panels">
+          <article>
+            <div class="panel-title">
+              <h2>Energy and Cost</h2>
+              <span>Baseline vs optimized</span>
+            </div>
+            <canvas id="barChart" width="720" height="300"></canvas>
+          </article>
+          <article>
+            <div class="panel-title">
+              <h2>Battery and Grid</h2>
+              <span>Interval profile</span>
+            </div>
+            <canvas id="lineChart" width="720" height="300"></canvas>
+          </article>
+        </section>
+
+        <section class="panels lower">
+          <article>
+            <div class="panel-title">
+              <h2>Acceptance Checks</h2>
+              <span>Hard constraints</span>
+            </div>
+            <div class="checks" id="checks"></div>
+          </article>
+          <article>
+            <div class="panel-title">
+              <h2>Reason Mix</h2>
+              <span>Explainability</span>
+            </div>
+            <div class="reasons" id="reasons"></div>
+          </article>
+        </section>
+
+        <section class="table-wrap">
+          <div class="panel-title">
+            <h2>Interval Schedule</h2>
+            <span id="tableNote">First 96 rows shown</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>AC</th>
+                <th>Setpoint</th>
+                <th>Fans</th>
+                <th>Grid kWh</th>
+                <th>Solar kWh</th>
+                <th>Battery SOC</th>
+                <th>Indoor C</th>
+                <th>Comfort</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+
