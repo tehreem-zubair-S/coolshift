@@ -4,6 +4,7 @@ const state = {
   scenarios: [],
   dates: [],
   result: null,
+  rerunTimer: null,
 };
 
 async function api(path) {
@@ -53,6 +54,16 @@ function bind() {
   });
   $("runButton").addEventListener("click", run);
   ["dateSelect", "daysSelect"].forEach((id) => $(id).addEventListener("change", run));
+  ["comfortWeight", "costWeight", "emissionsWeight", "peakWeight", "comfortMin", "comfortMax"].forEach((id) => {
+    $(id).addEventListener("input", scheduleRun);
+    $(id).addEventListener("change", scheduleRun);
+  });
+}
+
+function scheduleRun() {
+  window.clearTimeout(state.rerunTimer);
+  $("runButton").textContent = "Updating...";
+  state.rerunTimer = window.setTimeout(run, 450);
 }
 
 async function refreshDates() {
@@ -181,9 +192,11 @@ function renderLines(rows) {
   const sample = rows.filter((_, i) => i % Math.max(1, Math.floor(rows.length / 96)) === 0).slice(0, 120);
   const grid = sample.map((r) => Number(r.grid_energy_kwh));
   const soc = sample.map((r) => Number(r.battery_soc_kwh));
+  const indoor = sample.map((r) => Number(r.estimated_indoor_temp_c));
   drawSeries(ctx, canvas, grid, "#3467b7", "Grid kWh", 0);
   drawSeries(ctx, canvas, soc, "#157f5b", "Battery SOC", 1);
-  drawLegend(ctx, 24, canvas.height - 28, [["Grid kWh", "#3467b7"], ["Battery SOC", "#157f5b"]]);
+  drawSeries(ctx, canvas, indoor, "#be3a34", "Indoor C", 2);
+  drawLegend(ctx, 24, canvas.height - 28, [["Grid kWh", "#3467b7"], ["Battery SOC", "#157f5b"], ["Indoor C", "#be3a34"]]);
 }
 
 function clear(ctx, canvas) {
@@ -251,4 +264,3 @@ function money(value) {
 }
 
 init();
-

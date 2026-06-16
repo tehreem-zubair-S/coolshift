@@ -8,8 +8,10 @@ CoolShift is a full-stack cooling optimization platform for the Rapid Forge Buil
 - SQLite database seeded from the supplied workbook
 - Constraint-aware optimizer for AC/fan schedules, grid outages, solar, battery, comfort, cost, emissions, and explanations
 - Responsive frontend dashboard with scenario/date controls, KPIs, charts, validation checks, interval table, and CSV exports
+- Live objective controls that rerun optimization after slider/input changes
+- Time-series chart for grid energy, battery state of charge, and estimated indoor temperature
 - Reproducible custom seven-day scenario generator
-- Tests for acceptance conditions and validation cases
+- Tests for acceptance conditions, validation cases, outage handling, vulnerable-occupant overrides, and peak-tariff comfort conflicts
 
 ## Quick Start
 
@@ -38,7 +40,7 @@ The running app itself does not require `openpyxl` once `data\coolshift.sqlite` 
 1. Select a scenario: `PUB-A`, `PUB-B`, `PUB-C`, or `TEAM-CUSTOM`.
 2. Pick any available date and run 24-hour or seven-day optimization.
 3. Review baseline vs optimized metrics, comfort status, battery/SOC chart, and reason-coded recommendations.
-4. Change comfort, cost, emissions, or peak weights and rerun. Outputs update dynamically.
+4. Change comfort, cost, emissions, or peak weights. Outputs update dynamically.
 5. Export schedule and summary CSV files.
 
 ## Required Outputs
@@ -77,4 +79,3 @@ The optimizer is a deterministic, explainable heuristic:
 - Keeps AC/fan recommendations within installed appliance quantities and setpoint limits.
 
 Detailed formulas and assumptions are in `docs/method.md`.
-
